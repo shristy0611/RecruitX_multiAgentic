@@ -1,0 +1,86 @@
+**Project:** RecruitX
+**Goal:** Develop a multi-agent web application that analyzes Job Descriptions (JDs) and Candidate CVs using Gemini 2.5 Pro to generate a sophisticated scoring system, identifying the best-fit candidates.
+
+**Core Principles:**
+
+1.  **SOTA Driven:** Continuously research and integrate the best available techniques for each component (parsing, analysis, scoring).
+2.  **Multi-Agent Architecture:** Design distinct AI agents with specific roles, leveraging Gemini's capabilities.
+3.  **Scalability & Maintainability:** Build clean, well-structured code suitable for different environments (dev, test, prod).
+4.  **User-Centric:** Focus on providing clear, actionable insights to recruiters.
+
+**Proposed AI Agents:**
+
+1.  **JD Analysis Agent:**
+    *   Parses uploaded JDs (various formats).
+    *   Uses Gemini to extract key requirements, skills, experience levels, qualifications, and company culture indicators.
+    *   Structures this information for comparison.
+2.  **CV Analysis Agent:**
+    *   Parses uploaded CVs (various formats).
+    *   Uses Gemini to extract contact info, work history, education, skills, projects, and other relevant attributes.
+    *   Standardizes and structures the extracted CV data.
+3.  **Scoring & Matching Agent:**
+    *   Receives structured data from the JD and CV agents.
+    *   Uses Gemini (and potentially other SOTA techniques like semantic similarity) to compare the candidate's profile against the job requirements.
+    *   Generates a detailed score, potentially highlighting strengths, weaknesses, and specific matches/mismatches.
+    *   Provides explainability for the score.
+4.  **(Optional Later) Orchestration Agent:** Manages the workflow, triggers other agents, and aggregates results.
+
+**High-Level Technology Stack Considerations:**
+
+*   **Backend:** Python (Flask, FastAPI, or Django) - Good ecosystem for AI/ML and web development.
+*   **Frontend:** React, Vue, or Angular - Modern JavaScript frameworks for building interactive UIs.
+*   **Database:** PostgreSQL (good for structured data and potential future relational needs) or MongoDB (flexible for evolving data structures).
+*   **AI:** Google Gemini API (via Python client library).
+*   **Deployment:** Docker, Cloud Platform (GCP, AWS, Azure).
+
+**Roadmap:**
+
+**Phase 1: Foundation & Setup (Est. 1-2 Weeks)**
+
+1.    **Project Initialization:** Set up the project structure, Git repository (`RecruitX_multiAgentic`), basic README.
+2.    **Environment:** Configure environment management (e.g., using `python-dotenv` to load API keys from `.env`), dependency management (`requirements.txt` or `pyproject.toml`).
+3.    **Backend Choice & Setup:** Select and set up the chosen Python backend framework.
+4.    **Basic API:** Create a minimal API endpoint (e.g., a health check `/ping`) to ensure the backend is running.
+5.    **Gemini Connection Test:** Write a small script/utility to confirm connection to the Gemini API using one of the keys from `.env` and the `gemini-2.5-pro` model.
+
+**Phase 2: Core Data Handling & JD Agent (Est. 3-4 Weeks)**
+
+1.    **Database Setup:** Choose and configure the database. Define initial schemas/models for `Jobs` and `Candidates`.
+2.    **File Upload API:** Implement API endpoints for uploading JD files.
+3.    **JD Parsing:** Add initial logic to extract text from common JD formats (e.g., PDF, DOCX).
+4.    **JD Analysis Agent (v1):**
+    *   Integrate Gemini API calls.
+    *   Develop prompts for the agent to extract key information from JD text.
+    *   Store structured JD analysis results in the database.
+5.  **API Expansion:** Create endpoints to trigger JD analysis and retrieve results.
+
+**Phase 3: CV Agent & Basic Matching (Est. 3-4 Weeks)**
+
+1.    **CV Upload API:** Implement API endpoints for uploading CV files.
+2.    **CV Parsing:** Add logic for extracting text from common CV formats.
+3.    **CV Analysis Agent (v1):**
+    *   Integrate Gemini API calls.
+    *   Develop prompts for extracting structured information from CV text.
+    *   Store structured CV analysis results.
+4.  **Scoring & Matching Agent (v1):**
+    *   Develop initial logic to compare structured JD and CV data.
+    *   Implement a basic scoring mechanism (maybe keyword-based or simple Gemini comparison).
+    *   Define `Scores` schema/model.
+5.  **API Expansion:** Endpoints to trigger analysis/scoring for a candidate against a job and retrieve scores.
+
+**Phase 4: Frontend Development & Integration (Est. 4-6 Weeks)**
+
+1.    **Frontend Setup:** Choose and set up the frontend framework.
+2.    **UI Components:** Build UI for:
+    *   Uploading JDs and CVs.
+    *   Viewing lists of Jobs and Candidates.
+    *   Displaying analysis results and scores for a specific match.
+3.  **API Integration:** Connect frontend components to the backend APIs.
+
+**Phase 5: SOTA Refinement & Advanced Features (Ongoing)**
+
+1.  **Agent Improvement:** Refine prompts, potentially fine-tune models (if feasible/necessary), improve parsing robustness.
+2.  **Advanced Scoring:** Research and implement more sophisticated SOTA scoring techniques (semantic search, vector embeddings, graph-based matching). Enhance explainability.
+3.  **Testing:** Implement comprehensive unit, integration, and potentially end-to-end tests.
+4.  **Deployment Strategy:** Set up CI/CD pipelines for different environments.
+5.  **UX Enhancements:** Add features like candidate ranking, filtering, batch processing, etc.

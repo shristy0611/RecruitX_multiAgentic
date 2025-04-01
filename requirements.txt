@@ -1,0 +1,18 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+google-generativeai
+pydantic-settings
+
+# Database
+sqlalchemy>=2.0.0
+psycopg2-binary  # PostgreSQL adapter
+alembic  # Database migrations
+
+# File processing (for CVs and JDs)
+python-multipart  # For file uploads
+PyPDF2  # For PDF parsing
+python-docx  # For DOCX parsing
+
+# HTTP requests (for seeding script)
+requests 

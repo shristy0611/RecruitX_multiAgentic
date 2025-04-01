@@ -1,0 +1,71 @@
+**Analysis:**
+
+*   We have a working backend core with JD analysis and scoring functional *if* the data exists.
+*   The critical missing piece for a user workflow is **getting CV data into the system** and managing candidates.
+*   Improving the *quality* of analysis/scoring (prompts, RAG) is valuable but depends on having the core workflow operational.
+*   Recruiter UX features (batching, filtering, UI) depend on the core backend APIs being complete and robust.
+*   Frontend depends entirely on having the necessary backend APIs.
+
+**Prioritized Plan:**
+
+Here’s a suggested priority order that focuses on enabling the core workflow first, then enhancing quality and adding recruiter-specific features:
+
+**Priority 1: Enable Core Candidate Workflow (Complete Phase 3)**
+
+1.  **Implement CV Upload API (`POST /api/v1/candidates/upload`)**:
+    *   *Goal:* Allow users to upload CV files (PDF, DOCX, TXT).
+    *   *Steps:* Create the FastAPI endpoint, reuse the `extract_text_from_file` utility, create a `Candidate` record using `CandidateService.create_candidate`. Decide if analysis should be triggered immediately upon upload or separately.
+    *   *Depends on:* Existing `CandidateService`, `extract_text_from_file`.
+    *   *Enables:* Storing candidate data, prerequisite for CV analysis and scoring on user data.
+    *   *Roadmap:* Phase 3, Item 1 & 2.
+2.  **Implement Basic Candidate API Endpoints:**
+    *   *Goal:* Allow basic management and viewing of candidates.
+    *   *Steps:*
+        *   `GET /api/v1/candidates/`: List candidates (with pagination).
+        *   `GET /api/v1/candidates/{candidate_id}`: Get details of a specific candidate (including their `analysis` if available).
+        *   `POST /api/v1/candidates/{candidate_id}/analyze`: Endpoint to explicitly trigger `CandidateService.analyze_cv` if not done automatically on upload.
+        *   (Optional) `DELETE /api/v1/candidates/{candidate_id}`: Delete a candidate.
+    *   *Depends on:* `CandidateService`, `Candidate` model/schema.
+    *   *Enables:* Viewing candidate data, managing candidates, triggering analysis, feeding data to scoring and future frontend.
+    *   *Roadmap:* Related to Phase 3 completion / Phase 5 groundwork.
+
+**Priority 2: Refine Core AI Quality (Address Phase 5, Item 1)**
+
+3.  **Refine Scoring Agent Prompts (`simple_scoring_agent.py`)**:
+    *   *Goal:* Improve the accuracy, detail, and reliability of the skill extraction and score synthesis steps.
+    *   *Steps:* Review `SKILL_EXTRACTION_PROMPT` and `SCORE_SYNTHESIS_PROMPT`. Experiment with different phrasing, requesting specific formats, or adding few-shot examples if needed. Test changes with `test_scoring.py`.
+    *   *Depends on:* Completed Priority 1 (to have easy testing).
+    *   *Enables:* Higher quality scoring results.
+4.  **Refine JD & CV Analysis Agent Prompts (`jd_analysis_agent.py`, `cv_analysis_agent.py`)**:
+    *   *Goal:* Improve the structured data extraction from JDs and CVs.
+    *   *Steps:* Review `JD_ANALYSIS_PROMPT` and the CV analysis prompt. Ensure all desired fields are being extracted reliably. Test with respective test scripts.
+    *   *Depends on:* Completed Priority 1.
+    *   *Enables:* More accurate inputs for the scoring process and richer data for the frontend.
+
+**Priority 3: Enhance Recruiter Backend Features (Address Phase 5, Item 6)**
+
+5.  **Improve Batch Scoring (`/api/v1/scores/batch`)**:
+    *   *Goal:* Make batch scoring more robust and potentially faster (if API limits allow agent-level batching).
+    *   *Steps:* Analyze current endpoint limitations. Explore if the `OrchestrationAgent` can process multiple candidates per API call (might require prompt changes) or improve error handling/status reporting in the API loop.
+    *   *Depends on:* Completed Priority 1 & 2.
+    *   *Enables:* More efficient processing for recruiters with many candidates.
+6.  **Add API Support for Ranking/Filtering Scores:**
+    *   *Goal:* Allow retrieving scores for a job, sorted or filtered by specific criteria.
+    *   *Steps:* Modify `GET /api/v1/scores/job/{job_id}` endpoint (or create a new one) to accept query parameters (e.g., `min_score`, `sort_by`, `required_skill`). Implement the filtering/sorting logic in the `ScoringService`.
+    *   *Depends on:* Completed Priority 1 & 2.
+    *   *Enables:* Backend support for advanced frontend ranking features.
+
+**Priority 4: Begin Frontend & Advanced Backend R&D (Address Phase 4 & Phase 5)**
+
+7.  **Frontend Setup & Basic UI:**
+    *   *Goal:* Get the frontend project started and build initial interfaces.
+    *   *Steps:* Choose framework (React?), set up project, build basic components for upload, lists, and displaying analysis/scores. Integrate with the completed backend APIs.
+    *   *Depends on:* Completed Priority 1 APIs.
+    *   *Enables:* User interaction with the application.
+8.  **Research/Plan RAG & Advanced Scoring:**
+    *   *Goal:* Investigate and plan the implementation of more advanced techniques.
+    *   *Steps:* Research RAG libraries/approaches suitable for Gemini. Explore vector databases, semantic search integration. Define how these would fit into the existing agent architecture.
+    *   *Depends on:* Core system being stable.
+    *   *Enables:* Next-generation features for grounding and scoring accuracy.
+
+This plan focuses on building the essential blocks first (getting data in and managing it) before refining the AI quality and adding the more sophisticated recruiter-focused features and UI.
