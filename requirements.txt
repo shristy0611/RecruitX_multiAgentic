@@ -11,7 +11,7 @@ alembic>=1.13.0  # Database migrations
 
 # File processing (for CVs and JDs)
 python-multipart  # For file uploads
-PyPDF2  # For PDF parsing
+pypdf  # Replace PyPDF2 with pypdf
 python-docx  # For DOCX parsing
 
 # HTTP requests (for seeding script)
