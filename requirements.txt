@@ -1,13 +1,13 @@
 fastapi
 uvicorn[standard]
-python-dotenv
+python-dotenv>=1.0.0
 google-generativeai
 pydantic-settings
 
 # Database
 sqlalchemy>=2.0.0
-psycopg2-binary  # PostgreSQL adapter
-alembic  # Database migrations
+psycopg2-binary>=2.9.9  # PostgreSQL adapter
+alembic>=1.13.0  # Database migrations
 
 # File processing (for CVs and JDs)
 python-multipart  # For file uploads
@@ -16,3 +16,14 @@ python-docx  # For DOCX parsing
 
 # HTTP requests (for seeding script)
 requests 
+aiohttp>=3.8.5  # For async HTTP requests
+
+# Vector Database
+chromadb>=0.5.4
+numpy>=1.22,<2.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.1
+pytest-mock>=3.11.1
+httpx>=0.24.1  # For testing FastAPI endpoints
