@@ -1,29 +1,33 @@
-fastapi
-uvicorn[standard]
-python-dotenv>=1.0.0
-google-generativeai
-pydantic-settings
+# Core dependencies
+fastapi==0.110.0
+pydantic==2.6.1
+uvicorn==0.27.1
+python-dotenv==1.0.1
+sqlalchemy==2.0.27
+httpx==0.26.0
+aiofiles==23.2.1
+asyncpg==0.29.0
+alembic==1.13.1
+psycopg2-binary==2.9.9
 
-# Database
-sqlalchemy>=2.0.0
-psycopg2-binary>=2.9.9  # PostgreSQL adapter
-alembic>=1.13.0  # Database migrations
+# ML and AI
+google-generativeai==0.4.0
+chromadb==0.4.22
+sentence-transformers==2.6.0
+scikit-learn==1.6.1
 
-# File processing (for CVs and JDs)
-python-multipart  # For file uploads
-pypdf  # Replace PyPDF2 with pypdf
-python-docx  # For DOCX parsing
-
-# HTTP requests (for seeding script)
-requests 
-aiohttp>=3.8.5  # For async HTTP requests
-
-# Vector Database
-chromadb>=0.5.4
-numpy>=1.22,<2.0
+# PDF processing
+pdfminer.six==20221105
+pypdf==3.15.1
+python-docx==1.1.0
+openpyxl==3.1.2
+PyMuPDF==1.23.7
+Pillow==10.2.0
+pytesseract==0.3.10
+html2text==2024.2.26
 
 # Testing
-pytest>=7.4.0
-pytest-asyncio>=0.21.1
-pytest-mock>=3.11.1
-httpx>=0.24.1  # For testing FastAPI endpoints
+pytest==8.3.5
+pytest-cov==6.1.0
+pytest-asyncio==0.26.0
+pytest-mock==3.14.0

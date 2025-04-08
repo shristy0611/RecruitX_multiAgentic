@@ -1,6 +1,6 @@
+import os
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from recruitx_app.core.config import settings
 
 # We will update this to come from settings later, but for now use a SQLite database for development

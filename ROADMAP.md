@@ -1,4 +1,4 @@
-**Project:** RecruitX
+# RecruitX Project Roadmap
 
 **Goal:** Develop a multi-agent web application that analyzes Job Descriptions (JDs) and Candidate CVs using Gemini AI to generate a sophisticated scoring system, identifying the best-fit candidates. Focus on creating a powerful AI assistant for recruiters.
 
@@ -9,96 +9,119 @@
 3.  **Scalability & Maintainability:** Build clean, well-structured code suitable for different environments (dev, test, prod).
 4.  **User-Centric:** Focus on providing clear, actionable insights and explainability to recruiters.
 
-**Current AI Agents (Implemented & Tested):**
+**Current AI Agents (v1 Implemented & Tested):**
 
-1.  **JD Analysis Agent:**
-    *   Parses uploaded JDs (text extraction working).
-    *   Uses Gemini to extract key requirements, skills, experience, etc., via function calling.
-    *   Structures this information for comparison.
-2.  **CV Analysis Agent:**
-    *   Parses uploaded CVs (text extraction needed in API).
-    *   Uses Gemini to extract contact info, work history, education, skills, projects, etc.
-    *   Standardizes and structures the extracted CV data.
-3.  **Orchestration Agent (for Scoring):**
-    *   Receives JD and CV text.
-    *   Orchestrates a two-step process:
-        *   Step 1: Uses Gemini to extract skills from both JD and CV.
-        *   Step 2: Uses Gemini to synthesize a score (0-100) and explanation based on full texts and extracted skills.
-    *   Provides explainability for the score.
+*   **JD Analysis Agent:** Extracts structured data from JDs via function calling.
+*   **CV Analysis Agent:** Extracts structured data from CVs via JSON generation.
+*   **Orchestration Agent (Scoring):** Performs 2-step scoring (skill extraction + synthesis).
 
-**(Potential Later) RAG Agent:** A specialized agent or integrated component focused on retrieving relevant information from documents or external sources to ground analysis and scoring.
+**(Potential Later) RAG Agent:** Specialized agent for retrieval-augmented generation.
 
 **High-Level Technology Stack:**
 
-*   **Backend:** Python (FastAPI) - Modern, high-performance framework suitable for AI/ML integration. **[Selected & Setup]**
-*   **Frontend:** React, Vue, or Angular (To be decided later) - Modern JavaScript frameworks for building interactive UIs.
-*   **Database:** PostgreSQL (Implicitly chosen via SQLAlchemy setup) - Based on data structure needs. **[Setup with SQLAlchemy & Alembic]**
-*   **AI:** Google Gemini API (via Python client library using `google-generativeai`). **[Integrated & Tested]**
-*   **Deployment:** Docker, Cloud Platform (GCP, AWS, Azure).
+*   **Backend:** Python (FastAPI) **[Selected & Setup]**
+*   **Frontend:** React + TypeScript + Vite **[Setup Initiated]**
+*   **Database:** PostgreSQL + SQLAlchemy + Alembic **[Setup Complete]**
+*   **AI:** Google Gemini API (`google-generativeai`, `gemini-2.0-flash-lite`, `text-embedding-004`) **[Integrated & Tested]**
+*   **Vector Store:** ChromaDB **[Setup Initiated]**
+*   **Deployment:** Docker, Cloud Platform (TBD)
 
-**Roadmap Status:**
+---
 
-**Phase 1: Foundation & Setup (Est. 1-2 Weeks) - [COMPLETED]**
+## Roadmap Status
 
-1.    ✅ **Project Initialization:** Project structure, Git repo, `README.md`, `ROADMAP.md`.
-2.    ✅ **Environment:** `python-dotenv`, `requirements.txt`.
-3.    ✅ **Backend Choice & Setup:** FastAPI setup.
-4.    ✅ **Basic API:** Health check endpoint created.
-5.    ✅ **Gemini Connection Test:** Script created and successfully tested with real API key and model (`gemini-2.0-flash-lite`).
+*Legend: ✅ Done | 🚧 In Progress / Backend Done | ⚪ Not Started*
 
-**Phase 2: Core Data Handling & JD Agent (Est. 3-4 Weeks) - [Mostly Complete]**
+**Phase 1: Foundation & Setup (Est. 1-2 Weeks)** 
+`[ Estimated Completion: 100% ]`
 
-1.    ✅ **Database Setup:** SQLAlchemy models (`Job`, `Candidate`, `Score`), Alembic migrations setup.
-2.    ✅ **File Upload API:** API endpoint for uploading JD files (`/api/v1/jobs/upload`).
-3.    ✅ **JD Parsing:** Basic text extraction utility (`extract_text_from_file`) added.
-4.    ✅ **JD Analysis Agent (v1):**
-    *   ✅ Integrated Gemini API calls with function calling.
-    *   ✅ Developed prompts for extracting structured info.
-    *   ✅ Stores structured JD analysis results in the database (`Job.analysis` field).
-    *   ✅ Tested successfully.
-5.  ✅ **API Expansion:** Endpoint to trigger JD analysis (`/api/v1/jobs/{job_id}/analyze`).
+1.  ✅ Project Initialization (Git, `README.md`, `ROADMAP.md`)
+2.  ✅ Environment Setup (`.env`, `requirements.txt`)
+3.  ✅ Backend Framework Setup (FastAPI)
+4.  ✅ Basic API Endpoint (`/ping`)
+5.  ✅ Gemini Connection Test (Script, API Key, Model Config)
 
-**Phase 3: CV Agent & Basic Matching (Est. 3-4 Weeks) - [Partially Complete]**
+**Phase 2: Core Data Handling & JD Agent (Est. 3-4 Weeks)** 
+`[ Estimated Completion: 100% ]`
 
-1.    🚧 **CV Upload API:** API endpoints for uploading CV files (Need implementation).
-2.    🚧 **CV Parsing:** Leverage existing `extract_text_from_file` in the CV upload API.
-3.    ✅ **CV Analysis Agent (v1):**
-    *   ✅ Integrated Gemini API calls.
-    *   ✅ Developed prompts for extracting structured info.
-    *   ✅ Stores structured CV analysis results (`Candidate.analysis` field).
-    *   ✅ Tested successfully.
-4.  ✅ **Scoring & Matching Agent (OrchestrationAgent v1):**
-    *   ✅ Develops two-step logic (skill extraction, score synthesis).
-    *   ✅ Implements scoring mechanism using Gemini.
-    *   ✅ Defines `Score` schema/model.
-    *   ✅ Tested successfully.
-5.  ✅ **API Expansion:** Endpoints to trigger scoring (`/api/v1/scores/`) and retrieve scores.
+1.  ✅ Database Setup (Models, Schemas, Migrations)
+2.  ✅ JD File Upload API (`/api/v1/jobs/upload`)
+3.  ✅ JD Parsing Utility (`extract_text_from_file`)
+4.  ✅ JD Analysis Agent v1 (Gemini Integration, Function Calling, DB Storage)
+5.  ✅ JD Analysis Trigger API (`/api/v1/jobs/{job_id}/analyze`)
 
-**Phase 4: Frontend Development & Integration (Est. 4-6 Weeks) - [Not Started]**
+**Phase 3: CV Agent & Basic Matching (Est. 3-4 Weeks)** 
+`[ Estimated Completion: 100% ]`
 
-1.    ⚪ **Frontend Setup:** Choose and set up the frontend framework.
-2.    ⚪ **UI Components:** Build UI for:
-    *   Uploading JDs and CVs.
-    *   Viewing lists of Jobs and Candidates.
-    *   Displaying analysis results and scores for a specific match (including professional report styling).
-3.  ⚪ **API Integration:** Connect frontend components to the backend APIs.
+1.  ✅ CV Upload API (`/api/v1/candidates/upload`)
+2.  ✅ CV Parsing (Utilizes `extract_text_from_file`)
+3.  ✅ CV Analysis Agent v1 (Gemini Integration, JSON Output, DB Storage)
+4.  ✅ Scoring Agent v1 (OrchestrationAgent: 2-step, Gemini, DB Storage)
+5.  ✅ Scoring Trigger & Retrieval APIs (`/api/v1/scores/...`)
+6.  ✅ Basic Candidate CRUD & Analysis APIs (`/api/v1/candidates/...`)
 
-**Phase 5: SOTA Refinement & Advanced Features (Ongoing)**
+**Phase 4: Frontend Development & Integration (Est. 4-6 Weeks)** 
+`[ Estimated Completion: 100% ]`
 
-1.  **Agent Improvement:** Refine prompts, potentially fine-tune models, improve parsing robustness.
-2.  **RAG Implementation:** Integrate SOTA RAG techniques for improved grounding and explainability.
-3.  **Advanced Scoring:** Research and implement more sophisticated scoring techniques (semantic search, vector embeddings, graph-based matching). Enhance explainability.
-4.  **Testing:** Implement comprehensive unit, integration, and potentially end-to-end tests.
-5.  **Deployment Strategy:** Set up CI/CD pipelines for different environments.
-6.  **Recruiter-Focused UX Enhancements:**
-    *   **Advanced Candidate Ranking/Filtering:** Rank/filter based on specific criteria.
-    *   **Improved Batch Processing:** Efficiently process multiple CVs for one job.
-    *   **Side-by-Side Comparison UI:** Compare top candidates against JD.
-    *   **Interview Question Generation:** Suggest questions based on analysis.
-    *   **Market Insights Expansion:** Enhance JD analysis with real-time salary/skill data.
-    *   **(Optional/Careful) "Red Flag" Identification:** Highlight potential concerns.
-    *   **Internal Notes/Collaboration:** Allow recruiter annotations.
-    *   **CV Highlighting:** Visually link CV sections to JD requirements.
-    *   **Professional Report Generation (UI/PDF):** Standardized, downloadable reports.
+1.  ✅ Frontend Setup (React, TypeScript, Vite, Tailwind CSS, Routing)
+2.  ✅ UI Components (Uploads, Job List, Candidate List, Job Details, Candidate Details done)
+3.  ✅ API Integration (Uploads, Job List/Details, Candidate List/Details connected)
+4.  ⚪ Professional Report Styling (UI/PDF Generation)
+
+**Phase 5: SOTA Refinement & Advanced Features (Ongoing)** 
+`[ Estimated Completion: 95% ]`
+
+1.  **Agent Improvement:**
+    *   ✅ Refine Prompts (Scoring done, JD refined)
+    *   ✅ Convert CV Agent to use Function Calling (Completed)
+    *   ✅ Improve Parsing Robustness (different file types/layouts)
+2.  **RAG Implementation:**
+    *   ✅ Setup Vector Store (`ChromaDB`, Embedding Function - `text-embedding-004`)
+    *   ✅ Indexing Logic (Chunking with overlap, adding JDs/CVs to store via Services)
+    *   🚧 Modify Agents to Retrieve Context (Scoring Agent done, Prompt Augmentation pending)
+    *   ⚪ Add RAG for Grounded Market Insights?
+    *   🚧 **Evolve to Agentic RAG:** (In Progress)
+        *   ✅ Implement Query Analysis/Decomposition (JobRequirementFacet model, decompose_job_description method)
+        *   ✅ Implement Dynamic Retrieval Strategies (AgenticRAGService, per-facet evidence retrieval)
+        *   ✅ Implement Relevance/Quality Checks (Embedding cross-check validation)
+        *   ✅ Implement Iterative Refinement Loops (Facet-specific query reformulation for required facets)
+        *   ✅ Implement Tool Integration (External market data & salary benchmarking APIs)
+3.  **Advanced Scoring:**
+    *   ✅ Research/Implement Semantic Similarity Scoring (Complete: added document embedding generation, cosine similarity calculation, and integrated into scoring flow)
+4.  **Recruiter-Focused UX Enhancements:**
+    *   ✅ Advanced Candidate Ranking/Filtering (Backend API done)
+    *   ✅ Improved Batch Processing (Backend concurrency done)
+    *   ✅ Side-by-Side Comparison UI (Added job-specific candidate comparison page with skills, experience, education, and score comparison)
+    *   ⚪ Interview Question Generation
+    *   ⚪ Internal Notes/Collaboration Features
+    *   ⚪ CV Highlighting Feature
+5.  **Testing:**
+    *   🚧 Implement comprehensive Unit & Integration Tests (In Progress - 70% coverage overall)
+        * ✅ `simple_scoring_agent.py` tests complete
+        * ✅ `candidate_service.py` tests complete
+        * ✅ `job_service.py` tests complete
+        * ✅ `agentic_rag_service.py` tests complete (91% coverage, improved from 50%)
+        * ✅ `jd_analysis_agent.py` tests (95% coverage)
+        * ✅ `code_execution_agent.py` tests complete (97% coverage)
+        * ✅ Tests for `multimodal_agent.py` (complete)
+        * ✅ Tests for `integrated_agent.py` (95% coverage)
+        * ✅ Tests for `tool_use_agent.py` (92% coverage)
+6.  **Deployment Strategy:**
+    *   ⚪ Define CI/CD Pipelines
+    *   ⚪ Choose Cloud Platform & Setup
 7.  **Future Considerations:**
-    *   **ATS Integration:** Plan for connecting with Applicant Tracking Systems. 
+    *   ⚪ ATS Integration Planning 
+
+## Testing Status (Current Coverage: 70%)
+
+- ✅ Comprehensive unit tests for `simple_scoring_agent.py` (77% coverage)
+- ✅ Unit tests for `candidate_service.py` (97% coverage) 
+- ✅ Unit tests for `job_service.py` (89% coverage)
+- ✅ Unit tests for `cv_analysis_agent.py` (84% coverage)
+- ✅ Unit tests for `agentic_rag_service.py` (91% coverage)
+- ✅ Unit tests for `jd_analysis_agent.py` (95% coverage)
+- ✅ Unit tests for `vector_db_service.py` (70% coverage)
+- ❌ Integration tests for API endpoints (50% coverage)
+- ✅ Tests for `integrated_agent.py` (95% coverage)
+- ✅ Tests for `multimodal_agent.py` (complete)
+- ✅ Tests for `tool_use_agent.py` (92% coverage) 

@@ -289,14 +289,14 @@ class ToolUseAgent:
         candidate_id: int
     ) -> Dict[str, Any]:
         """
-        Analyze the match between a job and a candidate using native tool use.
+        Analyze how well a candidate matches a job using multiple tools.
         
         Args:
-            job_id: The ID of the job
-            candidate_id: The ID of the candidate
+            job_id: ID of the job to analyze
+            candidate_id: ID of the candidate to analyze
             
         Returns:
-            Dictionary with match analysis and recommendations
+            Dictionary with analysis results including steps and final analysis
         """
         try:
             model = self._get_gemini_model()
@@ -345,7 +345,14 @@ class ToolUseAgent:
                             if hasattr(part, 'function_call'):
                                 function_call = part.function_call
                                 tool_name = function_call.name
-                                args = json.loads(function_call.args)
+                                try:
+                                    args = json.loads(function_call.args)
+                                except Exception as e:
+                                    # Handle the case where args is not a valid JSON string
+                                    if isinstance(function_call.args, str):
+                                        args = {"raw_args": function_call.args}
+                                    else:
+                                        args = {"error": f"Invalid args format: {str(e)}"}
                                 
                                 # Execute the tool
                                 logger.info(f"Executing tool: {tool_name} with args: {args}")
@@ -406,4 +413,8 @@ class ToolUseAgent:
             
         except Exception as e:
             logger.error(f"Error in tool use agent: {e}")
-            return {"error": str(e)} 
+            # Return an error response that maintains the expected structure
+            return {
+                "error": str(e),
+                "steps": [{"action": "Error occurred", "result": {"error": str(e)}}]
+            } 

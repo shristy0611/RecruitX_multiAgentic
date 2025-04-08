@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     # Gemini Models - Using fully qualified names as required by the API
     GEMINI_PRO_MODEL: str = "models/gemini-2.0-flash-lite"  # Updated to use Gemini 2.0 Flash Lite for higher RPM
     GEMINI_PRO_VISION_MODEL: str = "models/gemini-2.0-flash-lite"  # Using the same model for vision as it supports multimodal inputs
+    GEMINI_EMBEDDING_MODEL: str
 
     # Project Specific Settings
     PROJECT_NAME: str = "RecruitX"

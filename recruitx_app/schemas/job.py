@@ -1,12 +1,13 @@
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Literal
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 
 # Base job schema with common attributes
 class JobBase(BaseModel):
     title: str
     company: Optional[str] = None
     location: Optional[str] = None
+    filename: str
 
 # Schema for creating a job (used when uploading a JD)
 class JobCreate(JobBase):
@@ -20,8 +21,7 @@ class Job(JobBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True  # For ORM compatibility
+    model_config = ConfigDict(from_attributes=True)
 
 # Schema for skill demand in market insights
 class SkillDemand(BaseModel):
@@ -50,4 +50,13 @@ class JobAnalysis(BaseModel):
     seniority_level: Optional[str] = Field(None, description="Seniority level (junior, mid, senior)")
     market_insights: Optional[MarketInsights] = Field(None, description="Grounded market insights about this job and industry")
     reasoning: Optional[str] = Field(None, description="Explanation of the analysis process and key insights")
-    analysis_process: Optional[str] = Field(None, description="Detailed thinking process from Gemini's analysis") 
+    analysis_process: Optional[str] = Field(None, description="Detailed thinking process from Gemini's analysis")
+
+# --- NEW: Pydantic Model for Decomposed Requirements --- 
+
+class JobRequirementFacet(BaseModel):
+    """Represents a single, verifiable requirement facet extracted from a JD."""
+    facet_type: Literal['skill', 'experience', 'education', 'certification', 'responsibility', 'language', 'location', 'tool', 'other'] = Field(..., description="The category of the requirement.")
+    detail: str = Field(..., description="The specific detail of the requirement (e.g., 'Python', '5+ years in backend development').")
+    is_required: bool = Field(..., description="Whether this requirement is explicitly stated as mandatory (true) or preferred/optional (false).")
+    context: Optional[str] = Field(None, description="Optional: Specific context provided in the JD about this requirement.") 

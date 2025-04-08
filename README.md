@@ -1,6 +1,73 @@
 # RecruitX
 
-A state-of-the-art multi-agent application for intelligent recruitment using Google's Gemini 2.5 Pro.
+A modern recruitment platform that helps match candidates with jobs using AI.
+
+## Setup
+
+### Backend Setup
+
+1. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up environment variables:
+   Copy the `.env.example` to `.env` (if not already done) and update values as needed.
+
+### Frontend Setup
+
+1. Install frontend dependencies:
+   ```bash
+   cd recruitx_frontend
+   npm install
+   ```
+
+## Running the Application
+
+### Option 1: Run Frontend and Backend Separately
+
+1. Run the backend:
+   ```bash
+   python run.py
+   ```
+   The backend will be available at http://localhost:8000
+
+2. In a separate terminal, run the frontend:
+   ```bash
+   cd recruitx_frontend
+   npm run dev
+   ```
+   The frontend will be available at http://localhost:3000
+
+### Option 2: Run Both Together
+
+Install the root-level dependencies:
+```bash
+npm install
+```
+
+Run both applications with one command:
+```bash
+npm run dev:all
+```
+
+## API Documentation
+
+Once the backend is running, you can access the API documentation at:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+## Development
+
+- Backend: FastAPI with Python
+- Frontend: React with TypeScript, Vite, and TailwindCSS
+- Database: SQLite by default (configurable in `.env`)
 
 ## Overview
 
@@ -133,6 +200,32 @@ Once the server is running, you can access the interactive API documentation at:
 - `GET /api/v1/scores/job/{job_id}` - Get all scores for a specific job
 - `GET /api/v1/scores/candidate/{candidate_id}` - Get all scores for a specific candidate
 - `POST /api/v1/scores/batch` - Generate scores for a job against multiple candidates
+
+## Testing
+
+RecruitX includes comprehensive test coverage for core components:
+
+### Current Test Coverage: 62%
+
+- Unit tests for all service layers
+- Specialized tests for AI agents and their capabilities
+- Mocked AI responses to enable reliable testing
+- Integration tests for the scoring pipeline
+
+Run the tests with coverage reporting:
+
+```bash
+# Run all tests
+python -m pytest
+
+# Run tests with coverage
+python -m pytest --cov=recruitx_app tests/
+
+# Run specific test file
+python -m pytest tests/unit/services/test_job_service.py -v
+```
+
+See `NEXT_STEPS.md` for the current testing roadmap and priorities.
 
 ## Implementation Roadmap
 

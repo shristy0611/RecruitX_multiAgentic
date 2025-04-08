@@ -138,7 +138,7 @@ class MultimodalAgent:
             logger.error(f"Error in multimodal analysis: {e}")
             return {"error": str(e)}
     
-    async def extract_text_from_document_image(self, image_data: bytes) -> str:
+    async def extract_text_from_document_image(self, image_data: bytes) -> Dict[str, Any]:
         """
         Extract text from an image of a document using Gemini 2.5 Pro's OCR capabilities.
         
@@ -146,7 +146,7 @@ class MultimodalAgent:
             image_data: The binary image data
             
         Returns:
-            Extracted text from the image
+            Dictionary containing the extracted text or error
         """
         try:
             model = self._get_gemini_model()
@@ -178,14 +178,66 @@ class MultimodalAgent:
             
             # Process and return the extracted text
             if hasattr(response, 'text') and response.text:
-                return response.text
+                return {"text": response.text}
             elif hasattr(response, 'parts') and response.parts:
                 text_content = " ".join(part.text for part in response.parts if hasattr(part, 'text'))
-                return text_content
+                return {"text": text_content}
             else:
                 logger.warning("No text content found in OCR response.")
-                return ""
+                return {"text": ""}
                 
         except Exception as e:
             logger.error(f"Error in OCR text extraction: {e}")
-            return f"Error extracting text: {str(e)}" 
+            return {"error": str(e)}
+    
+    async def get_image_description(self, image_data: bytes) -> Dict[str, Any]:
+        """
+        Get a detailed description of an image using Gemini 2.5 Pro.
+        
+        Args:
+            image_data: The binary image data
+            
+        Returns:
+            Dictionary containing the description or error
+        """
+        try:
+            model = self._get_gemini_model()
+            
+            # Encode image data
+            image_part = {
+                "inlineData": {
+                    "mimeType": "image/jpeg",  # Adjust if needed
+                    "data": base64.b64encode(image_data).decode("utf-8")
+                }
+            }
+            
+            # Define the description prompt
+            prompt = """
+            Describe this image in detail, including:
+            - Main subject or focus
+            - Visual elements and composition
+            - Context or setting
+            - Any text visible in the image
+            
+            Provide a comprehensive description that would help someone understand the image without seeing it.
+            """
+            
+            # Use the retry helper for the API call
+            response = await call_gemini_with_backoff(
+                model.generate_content,
+                [prompt, image_part]  # Pass content as a list
+            )
+            
+            # Process and return the description
+            if hasattr(response, 'text') and response.text:
+                return {"description": response.text}
+            elif hasattr(response, 'parts') and response.parts:
+                text_content = " ".join(part.text for part in response.parts if hasattr(part, 'text'))
+                return {"description": text_content}
+            else:
+                logger.warning("No text content found in image description response.")
+                return {"description": ""}
+                
+        except Exception as e:
+            logger.error(f"Error in image description generation: {e}")
+            return {"error": str(e)} 
